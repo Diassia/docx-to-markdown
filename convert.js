@@ -12,40 +12,36 @@ const iterateOverFilesInAFolder = (folderPath) => {
             return;
         }
         files.forEach(file => {
-            convertFileToMarkdown(file);
+            const fileExtension = path.extname(file);
+            // check if file is a .doc or .docx file
+            if (fileExtension === '.doc' || fileExtension === '.docx') {
+                convertFileToMarkdown(file, fileExtension);
+            }
         });
     });
 }
 
 
-const convertFileToMarkdown = async(file) => {
-    console.log(file);
+const convertFileToMarkdown = async(file, fileExtension) => {
+    if (fileExtension === '.docx') {
+        console.log(`attempting to convert ${file} to markdown`);
+    } else {
+        console.log(`attempting to convert ${file} to docx`);
+    }
 
-    let fileExtension = path.extname(file);
     let src = file;
     let args = '';
     const fileName = path.basename(file, fileExtension);
-    fileExtension = fileExtension.substring(1);
+    fileExt = fileExtension.substring(1);
 
-    if (fileExtension === 'doc') {
+    if (fileExt === 'doc') {
         const { stdout, stderr } = await exec(`doc2docx ${file}`);
         console.log('stdout:', stdout);
         console.log('stderr:', stderr);
 
-        fileExtension = 'docx';
         // update file with new extension
-        console.log('file path: ', file);
+        fileExt = 'docx';
         src = `./${fileName}.docx`;
-    }
-    
-    console.log('src: ', src);
-
-    if (fileExtension === 'docx') {
-        args = `-f ${fileExtension} -t markdown -o ./${fileName}.md`;
-        console.log("args: ", args);
-    } else {
-        console.error('File is not a .docx or .doc file');
-        return;
     }
 
     callback = (err, result) => {
@@ -55,21 +51,20 @@ const convertFileToMarkdown = async(file) => {
        
         // For output to files, the 'result' will be a boolean 'true'.
         // Otherwise, the converted value will be returned.
-        console.log(result);
         return result;
     };
 
-    // call pandoc
-    console.log('attempting to convert file');
+    // add converted file to convertedFiles folder (and generate if the folder does not exist)
+    if (!fs.existsSync('./convertedFiles')) {
+        fs.mkdirSync('./convertedFiles');
+    }
+    // add converted file to new convertedFiles folder
+    args = `-f ${fileExt} -t markdown -o ./convertedFiles/${fileName}.md`;
     nodePandoc(src, args, callback);
+    console.log(`${fileName}.md created`);
 }
 
 const main = () => {
-    // optional argument to specify the folder path
-    // default to current folder
-
-
-    console.log(__dirname);    
     iterateOverFilesInAFolder(__dirname);
 }
 
