@@ -4,7 +4,6 @@ const nodePandoc = require('node-pandoc');
 const util = require('node:util');
 const exec = util.promisify(require('node:child_process').exec);
 
-
 const iterateOverFilesInAFolder = (folderPath) => {
     fs.readdir(folderPath, (err, files) => {
         if (err) {
