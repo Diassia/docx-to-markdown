@@ -1,0 +1,25 @@
+{
+  "name": "docx-to-markdown",
+  "version": "1.0.0",
+  "description": "convert .doc and .docx files to md",
+  "main": "convert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Diassia/docx-to-markdown.git"
+  },
+  "author": "Kayleigh Shaw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Diassia/docx-to-markdown/issues"
+  },
+  "homepage": "https://github.com/Diassia/docx-to-markdown#readme",
+  "dependencies": {
+    "pandoc": "^0.2.0"
+  },
+  "devDependencies": {
+    "node-pandoc": "^0.3.0"
+  }
+}
